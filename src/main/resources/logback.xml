@@ -1,0 +1,57 @@
+<configuration>
+    <!-- Appender для отправки логов в Kafka -->
+<!--    <appender name="kafka" class="logger.KafkaAppender">-->
+<!--        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">-->
+<!--            <layout class="ch.qos.logback.classic.PatternLayout">-->
+<!--                <Pattern>-->
+<!--                    {-->
+<!--                    "timestamp_logger":"%date{dd MMM yyyy;HH:mm:ss.SSS}",-->
+<!--                    "app": "example-app-kafka",-->
+<!--                    "level":"%level",-->
+<!--                    "message":"%msg",-->
+<!--                    "thread": "%thread",-->
+<!--                    "exception":"%ex{full}"-->
+<!--                    }-->
+<!--                </Pattern>-->
+<!--            </layout>-->
+<!--        </encoder>-->
+<!--        <topic>log-topic</topic>-->
+<!--        <brokers>localhost:9092</brokers>-->
+<!--    </appender>-->
+
+
+    <appender name="logstash" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
+        <destination>localhost:5000</destination>
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <loggerName />
+                <pattern>
+                    <pattern>
+                        {
+                        "timestamp_logger":"%date{dd MMM yyyy;HH:mm:ss.SSS}",
+                        "app": "example-app-tsp",
+                        "level":"%level",
+                        "message":"%msg",
+                        "thread": "%thread",
+                        "exception":"%ex{full}"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <!-- Logger настройка -->
+    <root level="INFO">
+<!--        <appender-ref ref="kafka"/>-->
+        <appender-ref ref="logstash"/>
+        <appender-ref ref="STDOUT"/> <!-- new console appender reference -->
+    </root>
+
+
+</configuration>
